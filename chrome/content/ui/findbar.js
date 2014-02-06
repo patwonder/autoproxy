@@ -22,6 +22,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+Cu.import("resource://gre/modules/XPCOMUtils.jsm");
+
 /**
  * Fake browser implementation to make findbar widget happy - searches in
  * the filter list.
@@ -50,7 +52,13 @@ let fastFindBrowser =
     init: function() {},
     setDocShell: function() {},
     setSelectionModeAndRepaint: function() {},
-    collapseSelection: function() {}
+    collapseSelection: function() {},
+    // compatibility with Nightly 26+
+    addResultListener: function() {},
+    removeResultListener: function() {},
+    highlight: function() {},
+    focusContent: function () {},
+    removeSelection: function () {}
   },
   currentURI: aup.makeURL("http://example.com/"),
   contentWindow: {
@@ -66,6 +74,15 @@ let fastFindBrowser =
     {
       E("list").boxObject.scrollByPages(num);
     },
+    QueryInterface: XPCOMUtils.generateQI([Ci.nsIInterfaceRequestor]),
+    getInterface: function(aIID) {
+      if (aIID.equals(Ci.nsIDOMWindowUtils))
+        return this;
+      throw Cr.NS_NOINTERFACE;
+    },
+    get screenPixelsPerCSSPixel() {
+      return 1.0;
+    }
   },
 
   addEventListener: function(event, handler, capture)
@@ -77,4 +94,8 @@ let fastFindBrowser =
     E("list").addEventListener(event, handler, capture);
   },
 }
+
+// compatibility with Nightly 26+
+fastFindBrowser.finder = fastFindBrowser.fastFind;
+fastFindBrowser.finder.fastFind = fastFindBrowser.fastFind.find;
 
