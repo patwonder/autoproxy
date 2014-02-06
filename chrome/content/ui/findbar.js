@@ -20,6 +20,8 @@
  *
  * Contributor(s):
  *
+ *   Yifan Wu (patwonder@163.com)
+ *
  * ***** END LICENSE BLOCK ***** */
 
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
