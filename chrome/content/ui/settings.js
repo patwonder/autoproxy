@@ -118,7 +118,7 @@ function init()
   E("listStack").addEventListener("keypress", onListKeyPress, true);
 
   // Use our fake browser with the findbar - and prevent default action on Enter key
-  E("findbar").browser = fastFindBrowser;
+  try { E("findbar").browser = E("findbar")._browser = fastFindBrowser; } catch (ex) {}
   E("findbar").addEventListener("keypress", function(event)
   {
     // Work-around for bug 490047
