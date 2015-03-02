@@ -60,7 +60,11 @@ let fastFindBrowser =
     removeResultListener: function() {},
     highlight: function() {},
     focusContent: function () {},
-    removeSelection: function () {}
+    removeSelection: function () {},
+    requestMatchesCount: function() {},
+    enableSelection: function() {},
+    // compatibility with Nightly 38+
+    getInitialSelection: function() {},
   },
   currentURI: aup.makeURL("http://example.com/"),
   contentWindow: {
@@ -87,15 +91,20 @@ let fastFindBrowser =
     }
   },
 
-  addEventListener: function(event, handler, capture)
+  addEventListener: function(type, handler, capture, wantsUntrusted)
   {
-    E("list").addEventListener(event, handler, capture);
+    E("list").addEventListener(type, handler, capture, wantsUntrusted);
   },
-  removeEventListener: function(event, handler, capture)
+  removeEventListener: function(type, handler, capture)
   {
-    E("list").addEventListener(event, handler, capture);
+    E("list").removeEventListener(type, handler, capture);
   },
-}
+  dispatchEvent: function(event)
+  {
+    return E("list").dispatchEvent(event);
+  },
+  QueryInterface: XPCOMUtils.generateQI([Ci.nsIDOMEventTarget]),
+};
 
 // compatibility with Nightly 26+
 fastFindBrowser.finder = fastFindBrowser.fastFind;
