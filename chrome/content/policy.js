@@ -109,7 +109,7 @@ var policy =
       if (contentType != this.type.OBJECT && (node instanceof Ci.nsIDOMHTMLObjectElement || node instanceof Ci.nsIDOMHTMLEmbedElement))
         contentType = this.type.OBJECT;
 
-      docDomain = wnd.location.host;
+      docDomain = wnd && wnd.location.host;
       thirdParty = this.isThirdParty(location, docDomain);
     }
 
@@ -124,7 +124,8 @@ var policy =
     //     * just like onChannelRedirect() did for 301/302 redirection.
     if (location == this.ContentURI) {
       var data = RequestList.getDataForWindow(wnd);
-      data.addNode(node, contentType, docDomain, thirdParty, locationText, match);
+      if (data)
+        data.addNode(node, contentType, docDomain, thirdParty, locationText, match);
     }
 
     if (match && arguments.length == 1)

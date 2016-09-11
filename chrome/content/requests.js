@@ -239,6 +239,9 @@ RequestList.prototype = {
  */
 RequestList.getDataForWindow = function(wnd, noInstall)
 {
+  if (!wnd)
+      return null;
+  
   if (wnd.document && docDataProp in wnd.document)
     return wnd.document[docDataProp];
   else if (!noInstall)
